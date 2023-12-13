@@ -2,7 +2,7 @@
 const E = new Emanator(__dirname, {
 	type : 'NODE',
 	banner : 'kaspa faucet',
-	git : 'git@github.com:aspectron/kaspa-faucet',
+	git : 'git@github.com:karlsen-network/node-karlsen-faucet',
 	production: true,
 });
 
@@ -16,11 +16,11 @@ if(E.args.includes('update'))
 
 if(E.args.includes('kaspad')) {
 
-    let dest = path.join(go.SRC,'github.com/kaspanet/');
+    let dest = path.join(go.SRC,'github.com/karlsen-network/');
     if((E.flags.reset || E.flags.clean) && fs.existsSync(dest))
         await E.emptyDir(dest);
 
-	await git.clone(`https://github.com/kaspanet/kaspad`, dest);
+	await git.clone(`https://github.com/karlsen-network/karlsend`, dest);
 
 	let targets = [
 		'kaspad',

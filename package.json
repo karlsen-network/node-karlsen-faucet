@@ -6,6 +6,16 @@
     "start": "node kaspa-faucet"
   },
   "main": "kaspa-faucet.js",
+  "authors": [
+    {
+      "name": "ASPECTRON Inc",
+      "email": "info@aspectron.com"
+    },
+    {
+      "name": "Karlsen Developers",
+      "email": "lemois1337@protonmail.com"
+    }
+  ],
   "dependencies": {
     "@aspectron/flow-http": ">=0.2.4",
     "@aspectron/flow-router": "aspectron/flow-router",
@@ -30,7 +40,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aspectron/kaspa-faucet"
+    "url": "git+https://github.com/karlsen-network/node-karlsen-faucet"
   },
   "license": "ICS",
   "private": true
