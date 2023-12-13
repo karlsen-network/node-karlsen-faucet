@@ -1,6 +1,6 @@
 import {dpc, html, css, BaseElement, FlowFormat } from '/flow/flow-ux/flow-ux.js';
 import {Decimal} from '/flow/flow-ux/extern/decimal.js';
-import {KAS} from './kas.js';
+import {KLS} from './kas.js';
 
 export class FaucetForm extends BaseElement {
 	static get properties(){
@@ -44,9 +44,9 @@ export class FaucetForm extends BaseElement {
 
 		const { aliases } = flow.app;
 		return html`
-			<div class="message">Enter your address and the amount of Kaspa you want to receive:</div>
+			<div class="message">Enter your address and the amount of Karlsen you want to receive:</div>
 			<flow-input label="Address (Must start with '${this.network}' prefix)" class="address" x-value="${this.address}"></flow-input>
-			<flow-input label="Amount (KAS)" class="amount" value=""></flow-input>
+			<flow-input label="Amount (KLS)" class="amount" value=""></flow-input>
 			<flow-select label="Network" selected="${this.network}" class="network"
 				@select=${this.networkChange}>
 				${this.networks.map(n => html`<flow-menu-item value="${n}">${aliases[n]}</flow-menu-item>`)}
@@ -67,10 +67,10 @@ export class FaucetForm extends BaseElement {
 		let amount = qS(".amount").value;
 		let captcha = this.querySelector('.g-recaptcha .g-recaptcha-response')?.value;
 		//let network = flow.app.network;
-		//kaspatest:qq0nvlmn07f6edcdfynt4nu4l4r58rkquuvgt635ac
+		//karlsentest:qq0nvlmn07f6edcdfynt4nu4l4r58rkquuvgt635ac
 		console.log({ address, network, amount, captcha });
 
-		if(!/^kaspa:[1-9A-HJ-NP-Za-km-z]/.test(address)){
+		if(!/^karlsen:[1-9A-HJ-NP-Za-km-z]/.test(address)){
 			return this.setError("Invalid Address");
 		}
 
@@ -109,7 +109,7 @@ export class FaucetForm extends BaseElement {
 				let msg = '';
 				if(error.error == 'limit') {
 					let { period, available } = error;
-					msg = html`Unable to send funds: you have <b>${KAS(available)}</b> KAS ${ period == null ? html`available.` : html`remaining.<br/>&nbsp;<br/>Your limit will update in ${FlowFormat.duration(period)}.` }`;
+					msg = html`Unable to send funds: you have <b>${KLS(available)}</b> KLS ${ period == null ? html`available.` : html`remaining.<br/>&nbsp;<br/>Your limit will update in ${FlowFormat.duration(period)}.` }`;
 				}
 				else {
 					msg = error.error || error.toString();
@@ -141,7 +141,7 @@ export class FaucetForm extends BaseElement {
 				body: html`
 					<div class="msg">
 						We have successfully sent
-						<b>${KAS(result.amount)} KAS</b> to the requested address:<br/>&nbsp;<br/>
+						<b>${KLS(result.amount)} KLS</b> to the requested address:<br/>&nbsp;<br/>
 						<b>${address}</b><br/>&nbsp;<br/>
 						<span class='txid'><nobr>TXID: ${result.txid}</nobr></span>
 					</div>

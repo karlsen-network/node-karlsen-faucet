@@ -23,19 +23,19 @@ const {FlowHttp} = require('@aspectron/flow-http')({
 	CookieSignature,
 });
 const Decimal = require('decimal.js');
-const { Wallet, initKaspaFramework, log } = require('@kaspa/wallet-worker');
+const { Wallet, initKarlsenFramework, log } = require('@karlsen/wallet-worker');
 Wallet.setWorkerLogLevel("none");
 
-const { RPC } = require('@kaspa/grpc-node');
+const { RPC } = require('@karlsen/grpc-node');
 const DAY = 1000*60*60*24;
 const HOUR = 1000*60*60;
 const MIN = 1000*60;
 
-class KaspaFaucet extends EventEmitter{
+class KarlsenFaucet extends EventEmitter{
 	constructor(appFolder){
 		super();
 		this.appFolder = appFolder;
-		this.config = utils.getConfig(path.join(appFolder, "config", "kaspa-faucet"));
+		this.config = utils.getConfig(path.join(appFolder, "config", "karlsen-faucet"));
 		if(!this.config.apikeys)
 			log.error('missing config.apikeys configuration');
 		this.ip_limit_map = new Map();
@@ -60,7 +60,7 @@ class KaspaFaucet extends EventEmitter{
 					port,
 					session:{
 						secret:"34343546756767567657534578678672346573237436523798",
-						key:"kaspa-faucet-website"
+						key:"karlsen-faucet-website"
 					}
 				},
 				staticFiles:{
@@ -113,9 +113,9 @@ class KaspaFaucet extends EventEmitter{
 		})
 	}
 */
-	async initKaspa() {
+	async initKarlsen() {
 
-		await initKaspaFramework();
+		await initKarlsenFramework();
 
 		const aliases = Object.keys(Wallet.networkAliases);
 		let filter = aliases.map((alias) => { return this.options[alias] ? Wallet.networkAliases[alias] : null; }).filter(v=>v);
@@ -281,7 +281,7 @@ class KaspaFaucet extends EventEmitter{
 					msg.error(`Invalid amount: ${amount_}`);
 					continue;
 				}
-				log.info(`request from ${ip} for ${Wallet.KAS(amount)}`);
+				log.info(`request from ${ip} for ${Wallet.KLS(amount)}`);
 				const limit = this.limits[network] === false ? Number.MAX_SAFE_INTEGER : (this.limits[network] || 0);
 
 				if(!this.networks.includes(network)) {
@@ -334,7 +334,7 @@ class KaspaFaucet extends EventEmitter{
 
 		const getAvailable = async ({network, ip})=>{
 			
-			if(!network || !/^kaspa(test|dev|sim)*/.test(network))
+			if(!network || !/^karlsen(test|dev|sim)*/.test(network))
 				return { error : `Unknown network: ${network}` };
 
 			network = network.split(':').shift();
@@ -345,12 +345,12 @@ class KaspaFaucet extends EventEmitter{
 			return {available, period};
 		}
 
-		const getKaspa = async ({address, amount:amount_, ip})=>{
+		const getKarlsen = async ({address, amount:amount_, ip})=>{
 			const amount = parseInt(amount_);
 			if(isNaN(amount) || !amount || amount < 0)
 				return { error : `Invalid amount: ${amount_}` };
 			
-			if(!address || !/^kaspa(test|dev|sim)*:/.test(address))
+			if(!address || !/^karlsen(test|dev|sim)*:/.test(address))
 				return { error : `Invalid address: ${address}` };
 
 			let network = address.split(':').shift();
@@ -362,7 +362,7 @@ class KaspaFaucet extends EventEmitter{
 
 			let { available, period } = this.calculateAvailable({ network, ip, address });
 			if(available < amount) {
-				return { error : `Unable to send funds: you have ${this.KAS(available)} KAS ${ period == null ? `available.` : `remaining. Your limit will update in ${this.duration(period)}.` }`};
+				return { error : `Unable to send funds: you have ${this.KLS(available)} KLS ${ period == null ? `available.` : `remaining. Your limit will update in ${this.duration(period)}.` }`};
 			}
 			else {
 				try {
@@ -403,7 +403,7 @@ class KaspaFaucet extends EventEmitter{
 			const amount = req.query.amount;
 			const address = req.params.address;
 			const ip = req.query.ip;
-			res.json(await getKaspa({address, amount, ip}))
+			res.json(await getKarlsen({address, amount, ip}))
 		});
 		*/
 
@@ -418,7 +418,7 @@ class KaspaFaucet extends EventEmitter{
 			const address = req.params.address;
 			const amount = req.params.amount;
 			const ip = getIp(req);
-			res.json(await getKaspa({address, amount, ip}))
+			res.json(await getKarlsen({address, amount, ip}))
 		});
 		*/
 
@@ -497,7 +497,7 @@ class KaspaFaucet extends EventEmitter{
 		const program = this.program = new Command();
 		program
 			.version('0.0.1', '--version')
-			.description('Kaspa Faucet')
+			.description('Karlsen Faucet')
 			.helpOption('--help','display help for command')
 			.option('--log <level>',`set log level ${logLevels.join(', ')}`, (level)=>{
 				if(!logLevels.includes(level))
@@ -519,13 +519,13 @@ class KaspaFaucet extends EventEmitter{
 					throw new Error('Port number is out of range');
 				return port;
 			})
-			.option('--limit <limit>',`KAS/day limit per IP`, (limit)=>{
+			.option('--limit <limit>',`KLS/day limit per IP`, (limit)=>{
 				limit = parseFloat(limit);
 				if(isNaN(limit) || limit <= 0)
-					throw new Error('KAS/day limit is invalid');
+					throw new Error('KLS/day limit is invalid');
 				return limit;
 			})
-			.option('--no-limit','disable KAS/day limit')
+			.option('--no-limit','disable KLS/day limit')
             .option('--rpc <address>','use custom RPC address <host:port>')
 			;
 
@@ -542,14 +542,14 @@ class KaspaFaucet extends EventEmitter{
 				log.level = (this.options.verbose&&'verbose')||(this.options.debug&&'debug')||(this.options.log)||'info';
 
 				await this.initHttp();
-				await this.initKaspa();
+				await this.initKarlsen();
 				await this.initFaucet();
 			})
 
 		program.parse();
 	}
 
-	KAS(v) {
+	KLS(v) {
 		var [int,frac] = Decimal(v).mul(1e-8).toFixed(8).split('.');
 		int = int.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		frac = frac?.replace(/0+$/,'');
@@ -559,9 +559,9 @@ class KaspaFaucet extends EventEmitter{
 }
 
 (async () => {
-	let kaspaFaucet = new KaspaFaucet(__dirname);
+	let karlsenFaucet = new KarlsenFaucet(__dirname);
 	try {
-		await kaspaFaucet.main();
+		await karlsenFaucet.main();
 	} catch(ex) {
 		console.log(ex.toString());
 	}

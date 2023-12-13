@@ -1,7 +1,7 @@
 
 const E = new Emanator(__dirname, {
 	type : 'NODE',
-	banner : 'kaspa faucet',
+	banner : 'karlsen faucet',
 	git : 'git@github.com:karlsen-network/node-karlsen-faucet',
 	production: true,
 });
@@ -14,7 +14,7 @@ const npm = await E.modules.npm({ production : true });
 if(E.args.includes('update'))
     await npm.reinstall();
 
-if(E.args.includes('kaspad')) {
+if(E.args.includes('karlsend')) {
 
     let dest = path.join(go.SRC,'github.com/karlsen-network/');
     if((E.flags.reset || E.flags.clean) && fs.existsSync(dest))
@@ -23,18 +23,11 @@ if(E.args.includes('kaspad')) {
 	await git.clone(`https://github.com/karlsen-network/karlsend`, dest);
 
 	let targets = [
-		'kaspad',
-		'kaspad/cmd/kaspaminer'
+		'karlsend',
+		'karlsend/cmd/karlsenminer'
 	];
 
-	// if(E.flags['nodns']) {
-	// 	const params = path.join(dest,'kaspad/domain/dagconfig/params.go');
-	// 	let text = fs.readFileSync(params,'utf-8');
-	// 	text.replace('testnet-dnsseed.kas.pa:17100','testnet-dnsseed.kdx.app:17100');
-	// 	fs.writeFileSync(params,text,{encoding:'utf-8'});
-	// }
-
-	console.log('Building kaspa binaries...')
+	console.log('Building karlsen binaries...')
 	let folders = []
 	for(let target of targets) {
 		let folder = path.join(dest,target);

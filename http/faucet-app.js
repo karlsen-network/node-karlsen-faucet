@@ -4,9 +4,9 @@ export *  from './faucet-form.js';
 export *  from './faucet-info.js';
 export *  from './faucet-balance.js';
 export *  from './faucet-transactions.js';
-export *  from './kaspa-transaction.js';
+export *  from './karlsen-transaction.js';
 
-class KaspaFaucetApp extends FlowApp {
+class KarlsenFaucetApp extends FlowApp {
 
 	static get properties(){
 		return {
@@ -21,18 +21,18 @@ class KaspaFaucetApp extends FlowApp {
 	constructor(){
 		super();
 
-		this.networks = ['kaspa','kaspatest','kaspadev','kaspasim'];
-		this.network = "kaspatest";
+		this.networks = ['karlsen','karlsentest','karlsendev','karlsensim'];
+		this.network = "karlsentest";
 		this.addresses = {};
 		this.available = {};
 		this.limits = {};
 		this.opt = {};
 
 		this.aliases = {
-			kaspa : 'MAINNET',
-			kaspatest : 'TESTNET',
-			kaspadev : 'DEVNET',
-			kaspasim : 'SIMNET'
+			karlsen : 'MAINNET',
+			karlsentest : 'TESTNET',
+			karlsendev : 'DEVNET',
+			karlsensim : 'SIMNET'
 		}
 
 		this.initLog();
@@ -148,4 +148,4 @@ class KaspaFaucetApp extends FlowApp {
 
 }
 
-KaspaFaucetApp.define("kaspa-faucet-app");
+KarlsenFaucetApp.define("karlsen-faucet-app");
