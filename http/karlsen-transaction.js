@@ -1,5 +1,5 @@
 import {dpc, html, css, BaseElement, FlowFormat} from '/flow/flow-ux/flow-ux.js';
-import {KLS} from './kas.js';
+import {KLS} from './kls.js';
 
 export class KarlsenTransaction extends BaseElement {
 	static get properties(){

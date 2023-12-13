@@ -1,6 +1,6 @@
 import {dpc, html, css, BaseElement, FlowFormat } from '/flow/flow-ux/flow-ux.js';
 import {Decimal} from '/flow/flow-ux/extern/decimal.js';
-import {KLS} from './kas.js';
+import {KLS} from './kls.js';
 
 export class FaucetForm extends BaseElement {
 	static get properties(){
