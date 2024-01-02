@@ -234,9 +234,11 @@ body.flow-theme-light {
 	--flow-select-border: var(--flow-input-border);
 	--flow-select-label-border: 0px;
 	--flow-select-selected-min-width: 200px;
-	--flow-btn-hover-border-color: var(--flow-primary-color);
-	--flow-btn-hover-primary-bg-color: white;
-	--flow-btn-hover-primary-color: var(--flow-primary-color);
+	--flow-btn-primary-bg-color: #4C5157;
+	--flow-btn-primary-border-color: #4C5157;
+	--flow-btn-hover-border-color: #808080;
+	--flow-btn-hover-primary-bg-color: #808080;
+	--flow-btn-hover-primary-color: #000000;
 	--flow-btn-border-color: none;
 	--flow-btn-border-width: 1.5px;
 	--flow-btn-padding: 10px 16px;
