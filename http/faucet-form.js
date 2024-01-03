@@ -1,6 +1,41 @@
-import {dpc, html, css, BaseElement, FlowFormat } from '/flow/flow-ux/flow-ux.js';
+import {dpc, html, css, BaseElement, FlowFormat, trigger } from '/flow/flow-ux/flow-ux.js';
 import {Decimal} from '/flow/flow-ux/extern/decimal.js';
-import {KAS} from './kas.js';
+import {KLS} from './kls.js';
+
+if (!window.OnhCaptchaLoad) {
+	window.OnhCaptchaLoad = () => {
+		trigger("g-recaptcha-ready");
+		buildhCaptcha();
+	}
+}
+
+export const buildhCaptcha = root=>{
+	if (!window.grecaptcha) {
+		return
+	}
+	root = root || document;
+	root.querySelectorAll('.h-captcha').forEach((el) => {
+		let id = el.dataset.grecaptchaId;
+		if (id !== undefined) {
+			grecaptcha.reset(id);
+			return
+		}
+
+		id = grecaptcha.render(el, {
+			'sitekey' : el.dataset.sitekey || document.body.dataset.recaptchaKey,
+			callback(data) {
+				trigger("g-recaptcha", {code:"success", data}, {bubbles:true}, el)
+			},
+			'expired-callback' : () => {
+				trigger("g-recaptcha", {code:"expired"}, {bubbles:true}, el)
+			},
+			'error-callback' : () => {
+				trigger("g-recaptcha", {code:"error"}, {bubbles:true}, el)
+			}
+		});
+		el.dataset.grecaptchaId = id;
+	});
+}
 
 export class FaucetForm extends BaseElement {
 	static get properties(){
@@ -39,14 +74,13 @@ export class FaucetForm extends BaseElement {
 	offlineCallback() {
 	}
 
-
 	render(){
 
 		const { aliases } = flow.app;
 		return html`
-			<div class="message">Enter your address and the amount of Kaspa you want to receive:</div>
+			<div class="message">Enter your address and the amount of Karlsen you want to receive:</div>
 			<flow-input label="Address (Must start with '${this.network}' prefix)" class="address" x-value="${this.address}"></flow-input>
-			<flow-input label="Amount (KAS)" class="amount" value=""></flow-input>
+			<flow-input label="Amount (KLS)" class="amount" value=""></flow-input>
 			<flow-select label="Network" selected="${this.network}" class="network"
 				@select=${this.networkChange}>
 				${this.networks.map(n => html`<flow-menu-item value="${n}">${aliases[n]}</flow-menu-item>`)}
@@ -65,12 +99,12 @@ export class FaucetForm extends BaseElement {
 		let address = qS(".address").value;
 		let network = qS(".network").value;
 		let amount = qS(".amount").value;
-		let captcha = this.querySelector('.g-recaptcha .g-recaptcha-response')?.value;
+		let captcha = this.querySelector('[name=h-captcha-response]')?.value;
 		//let network = flow.app.network;
-		//kaspatest:qq0nvlmn07f6edcdfynt4nu4l4r58rkquuvgt635ac
+		//karlsentest:qq0nvlmn07f6edcdfynt4nu4l4r58rkquuvgt635ac
 		console.log({ address, network, amount, captcha });
 
-		if(!/^kaspa:[1-9A-HJ-NP-Za-km-z]/.test(address)){
+		if(!/^karlsen:[1-9A-HJ-NP-Za-km-z]/.test(address)){
 			return this.setError("Invalid Address");
 		}
 
@@ -109,7 +143,7 @@ export class FaucetForm extends BaseElement {
 				let msg = '';
 				if(error.error == 'limit') {
 					let { period, available } = error;
-					msg = html`Unable to send funds: you have <b>${KAS(available)}</b> KAS ${ period == null ? html`available.` : html`remaining.<br/>&nbsp;<br/>Your limit will update in ${FlowFormat.duration(period)}.` }`;
+					msg = html`Unable to send funds: you have <b>${KLS(available)}</b> KLS ${ period == null ? html`available.` : html`remaining.<br/>&nbsp;<br/>Your limit will update in ${FlowFormat.duration(period)}.` }`;
 				}
 				else {
 					msg = error.error || error.toString();
@@ -141,7 +175,7 @@ export class FaucetForm extends BaseElement {
 				body: html`
 					<div class="msg">
 						We have successfully sent
-						<b>${KAS(result.amount)} KAS</b> to the requested address:<br/>&nbsp;<br/>
+						<b>${KLS(result.amount)} KLS</b> to the requested address:<br/>&nbsp;<br/>
 						<b>${address}</b><br/>&nbsp;<br/>
 						<span class='txid'><nobr>TXID: ${result.txid}</nobr></span>
 					</div>
@@ -173,5 +207,5 @@ export class FaucetForm extends BaseElement {
 }
 
 FaucetForm.define("faucet-form",{
-	"window.grecaptcha":"https://www.google.com/recaptcha/api.js?onload=OnReCaptchaLoad&render=explicit"
+	"window.grecaptcha":"https://js.hcaptcha.com/1/api.js?onload=OnhCaptchaLoad&render=explicit"
 });

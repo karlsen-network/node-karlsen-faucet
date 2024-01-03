@@ -1,12 +1,13 @@
 import '/style/style.js';
-import {dpc, camelCase, html, UID, FlowApp, FlowFormat, buildReCaptcha } from '/flow/flow-ux/flow-ux.js';
+import { dpc, camelCase, html, UID, FlowApp, FlowFormat } from '/flow/flow-ux/flow-ux.js';
+import { buildhCaptcha } from './faucet-form.js';
 export *  from './faucet-form.js';
 export *  from './faucet-info.js';
 export *  from './faucet-balance.js';
 export *  from './faucet-transactions.js';
-export *  from './kaspa-transaction.js';
+export *  from './karlsen-transaction.js';
 
-class KaspaFaucetApp extends FlowApp {
+class KarlsenFaucetApp extends FlowApp {
 
 	static get properties(){
 		return {
@@ -21,18 +22,18 @@ class KaspaFaucetApp extends FlowApp {
 	constructor(){
 		super();
 
-		this.networks = ['kaspa','kaspatest','kaspadev','kaspasim'];
-		this.network = "kaspatest";
+		this.networks = ['karlsen','karlsentest','karlsendev','karlsensim'];
+		this.network = "karlsentest";
 		this.addresses = {};
 		this.available = {};
 		this.limits = {};
 		this.opt = {};
 
 		this.aliases = {
-			kaspa : 'MAINNET',
-			kaspatest : 'TESTNET',
-			kaspadev : 'DEVNET',
-			kaspasim : 'SIMNET'
+			karlsen : 'MAINNET',
+			karlsentest : 'TESTNET',
+			karlsendev : 'DEVNET',
+			karlsensim : 'SIMNET'
 		}
 
 		this.initLog();
@@ -66,7 +67,7 @@ class KaspaFaucetApp extends FlowApp {
 			let {captchaKey=""} = config||{};
 			this.captchaKey = captchaKey;
 			dpc(()=>{
-				buildReCaptcha();
+				buildhCaptcha();
 			}, 500)
 		})
 		this.networkUpdates = rpc.subscribe(`networks`);
@@ -130,7 +131,7 @@ class KaspaFaucetApp extends FlowApp {
 				<div col class='form-wrapper'>
 					<faucet-info limit="${limit}" available="${available}" address="${address}"></faucet-info>
 					<faucet-form network="${network}" .networks="${this.networks}" address="${address}" @network-change="${this.onNetworkChange}">
-						<div slot="captcha" class="${this.captchaKey? 'g-recaptcha': ''}" 
+						<div slot="captcha" class="${this.captchaKey? 'h-captcha': ''}"
 							data-sitekey="${this.captchaKey}"></div>
 					</faucet-form>
 				</div>
@@ -148,4 +149,4 @@ class KaspaFaucetApp extends FlowApp {
 
 }
 
-KaspaFaucetApp.define("kaspa-faucet-app");
+KarlsenFaucetApp.define("karlsen-faucet-app");

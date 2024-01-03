@@ -1,74 +1,88 @@
-# Kaspa Faucet
+# Karlsen Faucet
 
-Miniature Kaspa faucet website based on [Kaspa Wallet](https://github.com/aspectron/kaspa-wallet) framework
+Miniature Karlsen faucet website based on [Karlsen Wallet](https://github.com/karlsen-network/node-karlsen-wallet)
+framework.
 
-### Setup Kaspad
+## Setup Karlsend
 
-    $ git clone git@github.com:kaspanet/kaspad
-    $ cd kaspad
-    $ go build
-    $ cd cmd/kaspaminer
-    $ go build
+```
+git clone https://github.com/karlsen-network/karlsend
+cd karlsend
+go build
+cd cmd/karlsenminer
+go build
+```
 
-### Run Kaspad Testnet
-Terminal 1: 
-
-    $ cd kaspad
-    $ kaspad --utxoindex --testnet
-
-
-Terminal 2: 
-
-    $ cd kaspad/cmd/kaspaminer
-    $ kaspaminer --miningaddr=kaspatest:qpuyhaxz2chn3lsvf8g7q5uvaezpp5m7pyny4k8tyq --mine-when-not-synced --testnet
-
-*IMPORTANT: `kaspad 8.4 (master)` has a broken testnet genesis block, you must replace `--testnet` with `--devnet` and change the mining address to `kaspadev:qpuyhaxz2chn3lsvf8g7q5uvaezpp5m7pygf2jzn8d`.* *When changing configuration you may need to delete Kaspa blockchain located in `~/kaspad` folder. On Windows Kaspa blockchain is located in `AppData/Local/Kaspad`.* *(When starting, faucet will display it's deposit address.)*
-
-### Running
-
-    $ git clone git@github.com:aspectron/kaspa-faucet
-    $ cd kaspa-faucet
-    $ npm install
-    $ node kaspa-faucet
-
-### Development Environment
-
-To setup development environment for debugging kaspa-wallet and kaspacore-lib modules:
-
-Setup TypeScript:
-
-    $ npm install -g typescript
-    $ tsc -v
-    # tsc should yield 4.0.5 or higher
-
-Clone and setup repositories:
-
-    $ git clone git@github.com:aspectron/kaspa-faucet
-    $ git clone git@github.com:aspectron/kaspa-wallet
-    $ git clone git@github.com:aspectron/kaspacore-lib
-    $ cd kaspacore-lib
-    $ npm link
-    $ cd ..
-    $ cd kaspa-wallet
-    $ npm link
-    $ npm link kaspacore-lib
-    $ cd ..
-    $ cd kaspa-faucet
-    $ npm install
-    $ npm link kaspa-wallet
-    $ cd ..
+## Run Karlsend Testnet
 
 Terminal 1:
 
-    $ cd kaspa-wallet
-    $ tsc --watch
+```
+cd karlsend
+karlsend --utxoindex --testnet
+```
 
 Terminal 2:
 
-    $ cd kaspa-faucet
-    $ node kaspa-faucet
-    
-`node kaspa-faucet` will attempt to bind to all available networks. You can use `--devnet` and `--testnet` flags to have it bind to a single network.
+```
+cd karlsend/cmd/karlsenminer
+karlsenminer --miningaddr=karlsentest:qpuyhaxz2chn3lsvf8g7q5uvaezpp5m7pyny4k8tyq --mine-when-not-synced --testnet
+```
 
+## Running
 
+```
+git clone https://github.com/karlsen-network/node-karlsen-faucet
+cd node-karlsen-faucet
+npm install
+node karlsen-faucet
+```
 
+## Development Environment
+
+To setup development environment for debugging `karlsen-wallet` and
+`karlsencore-lib` modules:
+
+### Setup TypeScript
+
+```
+npm install -g typescript
+tsc -v
+```
+
+`tsc` should yield 4.0.5 or higher.
+
+### Clone and setup repositories
+
+git clone https://github.com/karlsen-network/node-karlsen-faucet
+git clone https://github.com/karlsen-network/node-karlsen-wallet
+git clone https://github.com/karlsen-network/node-karlsen-core-lib
+cd node-karlsen-core-lib
+npm link
+cd ..
+cd node-karlsen-wallet
+npm link
+npm link karlsen-core-lib
+cd ..
+cd node-karlsen-faucet
+npm install
+npm link karlsen-wallet
+cd ..
+
+Terminal 1:
+
+```
+cd node-karlsen-wallet
+tsc --watch
+```
+
+Terminal 2:
+
+```
+cd node-karlsen-faucet
+node karlsen-faucet
+```
+
+`node karlsen-faucet` will attempt to bind to all available networks.
+You can use `--devnet` and `--testnet` flags to have it bind to a
+single network.
