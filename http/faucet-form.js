@@ -1,6 +1,41 @@
-import {dpc, html, css, BaseElement, FlowFormat } from '/flow/flow-ux/flow-ux.js';
+import {dpc, html, css, BaseElement, FlowFormat, trigger } from '/flow/flow-ux/flow-ux.js';
 import {Decimal} from '/flow/flow-ux/extern/decimal.js';
 import {KLS} from './kls.js';
+
+if (!window.OnhCaptchaLoad) {
+	window.OnhCaptchaLoad = () => {
+		trigger("g-recaptcha-ready");
+		buildhCaptcha();
+	}
+}
+
+export const buildhCaptcha = root=>{
+	if (!window.grecaptcha) {
+		return
+	}
+	root = root || document;
+	root.querySelectorAll('.h-captcha').forEach((el) => {
+		let id = el.dataset.grecaptchaId;
+		if (id !== undefined) {
+			grecaptcha.reset(id);
+			return
+		}
+
+		id = grecaptcha.render(el, {
+			'sitekey' : el.dataset.sitekey || document.body.dataset.recaptchaKey,
+			callback(data) {
+				trigger("g-recaptcha", {code:"success", data}, {bubbles:true}, el)
+			},
+			'expired-callback' : () => {
+				trigger("g-recaptcha", {code:"expired"}, {bubbles:true}, el)
+			},
+			'error-callback' : () => {
+				trigger("g-recaptcha", {code:"error"}, {bubbles:true}, el)
+			}
+		});
+		el.dataset.grecaptchaId = id;
+	});
+}
 
 export class FaucetForm extends BaseElement {
 	static get properties(){
@@ -39,7 +74,6 @@ export class FaucetForm extends BaseElement {
 	offlineCallback() {
 	}
 
-
 	render(){
 
 		const { aliases } = flow.app;
@@ -65,7 +99,7 @@ export class FaucetForm extends BaseElement {
 		let address = qS(".address").value;
 		let network = qS(".network").value;
 		let amount = qS(".amount").value;
-		let captcha = this.querySelector('.g-recaptcha .g-recaptcha-response')?.value;
+		let captcha = this.querySelector('[name=h-captcha-response]')?.value;
 		//let network = flow.app.network;
 		//karlsentest:qq0nvlmn07f6edcdfynt4nu4l4r58rkquuvgt635ac
 		console.log({ address, network, amount, captcha });
@@ -173,5 +207,5 @@ export class FaucetForm extends BaseElement {
 }
 
 FaucetForm.define("faucet-form",{
-	"window.grecaptcha":"https://www.google.com/recaptcha/api.js?onload=OnReCaptchaLoad&render=explicit"
+	"window.grecaptcha":"https://js.hcaptcha.com/1/api.js?onload=OnhCaptchaLoad&render=explicit"
 });

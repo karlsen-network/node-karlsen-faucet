@@ -1,5 +1,6 @@
 import '/style/style.js';
-import {dpc, camelCase, html, UID, FlowApp, FlowFormat, buildReCaptcha } from '/flow/flow-ux/flow-ux.js';
+import { dpc, camelCase, html, UID, FlowApp, FlowFormat } from '/flow/flow-ux/flow-ux.js';
+import { buildhCaptcha } from './faucet-form.js';
 export *  from './faucet-form.js';
 export *  from './faucet-info.js';
 export *  from './faucet-balance.js';
@@ -66,7 +67,7 @@ class KarlsenFaucetApp extends FlowApp {
 			let {captchaKey=""} = config||{};
 			this.captchaKey = captchaKey;
 			dpc(()=>{
-				buildReCaptcha();
+				buildhCaptcha();
 			}, 500)
 		})
 		this.networkUpdates = rpc.subscribe(`networks`);
@@ -130,7 +131,7 @@ class KarlsenFaucetApp extends FlowApp {
 				<div col class='form-wrapper'>
 					<faucet-info limit="${limit}" available="${available}" address="${address}"></faucet-info>
 					<faucet-form network="${network}" .networks="${this.networks}" address="${address}" @network-change="${this.onNetworkChange}">
-						<div slot="captcha" class="${this.captchaKey? 'g-recaptcha': ''}" 
+						<div slot="captcha" class="${this.captchaKey? 'h-captcha': ''}"
 							data-sitekey="${this.captchaKey}"></div>
 					</faucet-form>
 				</div>
