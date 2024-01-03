@@ -31,6 +31,62 @@ const DAY = 1000*60*60*24;
 const HOUR = 1000*60*60;
 const MIN = 1000*60;
 
+validatehCaptcha = (args, callback)=>{
+	return new Promise((resolve)=>{
+		let {req, captcha, secret, captchaSecret, core, data={}} = args;
+		captcha = captcha || data['g-recaptcha-response'];
+		secret = secret || captchaSecret || core?.config?.captcha?.secret;
+
+		if (!captcha || !captcha.length) {
+			resolve({
+				error: {
+					error : "Captcha validation failure",
+					type : "captcha", "error-codes" : ['invalid-input-response']
+				},
+				result: {
+					success : false
+				}
+			});
+			return
+		}
+
+		utils.fetch("https://hcaptcha.com/siteverify",{
+			method: 'GET',
+			qs: {
+				secret,
+				response: captcha
+			}
+		})
+		.then(response => {
+			console.log("response", response)
+			return response.json();
+		})
+		.then(data => {
+			if (data.success) {
+				return resolve({result:data});
+			}
+			let errors = data['error-codes'];
+			errors && console.log("errors",errors);
+
+			let error = data.error || '';
+			if (errors && errors.length) {
+				if (errors.includes('invalid-input-response')) {
+					error = (req && req._T) ? req._T("Please complete captcha") : "Please complete captcha";
+				} else {
+					error = errors.join('/');
+				}
+			}
+
+			return resolve({
+				error: {
+					error:error||"Captcha validation failure"
+				},
+				result: data
+			});
+		});
+	})
+}
+
 class KarlsenFaucet extends EventEmitter{
 	constructor(appFolder){
 		super();
@@ -274,16 +330,16 @@ class KarlsenFaucet extends EventEmitter{
 				const { data, ip, socket } = msg;
 				const { address, network, amount : amount_, captcha } = data;
 				let captchaRes = {};
-				captchaRes = await utils.validateCaptcha({captcha, secret: this.config.captcha.secret})
+				captchaRes = await validatehCaptcha({captcha, secret: this.config.captcha.secret})
 				.catch(err=>{
-					console.log("validateCaptcha:err", err)
+					console.log("validatehCaptcha:err", err)
 					if(!captchaRes)
 						captchaRes = {}
 					captchaRes.error = {error:"Captcha validation failure"};
 					captchaRes.result = {success:false};
 				});
 
-				//console.log("validateCaptcha:", captchaRes)
+				//console.log("validatehCaptcha:", captchaRes)
 
 				if(!captchaRes?.result.success){
 					msg.error(captchaRes?.error.error || "Captcha validation failure");
