@@ -97,10 +97,6 @@ body:not(.flow-theme-light) {
 	--logo-light-display: none;
 }
 
-body:not(.flow-theme-dark) {
-	--logo-dark-display: none;
-}
-
 .main-area {
 	display: flex;
 	flex-direction: row;
@@ -115,17 +111,9 @@ body:not(.flow-theme-dark) {
 	overflow-x: hidden;
 }
 
-.flow-theme-dark .main-area {
-	--flow-input-bg: #161927;
-}
-
 .flow-theme-light .menu li.active {
 	--fa-icon-color: #FFFFFF;
 	color: #FFFFFF;
-}
-
-.logo.dark {
-	display: var(--logo-dark-display, initial)
 }
 
 .logo.light {
@@ -178,7 +166,8 @@ flow-select.no-h-margin {
 	margin-right: 0px;
 }
 
-body.flow-theme-light {
+body.flow-theme-light,
+body.flow-theme-dark {
 	--color-l-offset: 0%;
 	--color-l-offset-more: 48%;
 	--color-box-active-border-color: #b1b1b1;
@@ -374,9 +363,9 @@ flow-dialog.custom .amount {
 }
 
 flow-dialog {
-	--flow-btn-hover-border-color: var(--flow-primary-color);
-	--flow-btn-hover-primary-bg-color: white;
-	--flow-btn-hover-primary-color: var(--flow-primary-color);
+	--flow-btn-hover-border-color: #808080;
+	--flow-btn-hover-primary-bg-color: #808080;
+	--flow-btn-hover-primary-color: #000000;
 }
 
 flow-dialog.custom .api-error {
