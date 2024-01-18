@@ -18,7 +18,7 @@ RUN apk add --no-cache bash nano coreutils
 
 RUN addgroup -S faucet && adduser -S faucet -G faucet
 RUN mkdir -p /run/postgresql
-RUN chown kdx:kdx /run/postgresql
+RUN chown karlsen-desktop:karlsen-desktop /run/postgresql
 
 # Tell docker that all future commands should run as the appuser user
 
@@ -26,7 +26,7 @@ WORKDIR /home/faucet/releases/faucet
 COPY . .
 RUN rm -rf node_modules
 RUN rm package-lock.json
-#RUN chown -R kdx:kdx .
+#RUN chown -R karlsen-desktop:karlsen-desktop .
 
 
 RUN npm install
@@ -37,4 +37,4 @@ USER faucet
 
 EXPOSE 42110 42210 42510 42610 42111 42211 42511 42611
 
-ENTRYPOINT ["node","karlsen-faucet-website.js","--run-karlsen-kdx","--testnet","--devnet"]
+ENTRYPOINT ["node","karlsen-faucet-website.js","--run-karlsen-desktop","--testnet","--devnet"]
